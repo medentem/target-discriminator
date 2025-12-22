@@ -2,6 +2,9 @@
 
 An Android application designed to help law enforcement, military, and private citizens train their minds to identify threats and non-threats quickly and safely.
 
+## Scenario Videos and Photos
+- So far all media in this app has been created using Grok Imagine. Each included asset was selected from many attempts to get them just right, but obviously they are not perfect.
+
 ## Features
 
 - **Splash Screen**: Initial loading screen when the app starts
