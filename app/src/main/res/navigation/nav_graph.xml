@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.targetdiscriminator.presentation.splash.SplashFragment"
+        android:label="Splash"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_sessionConfigFragment"
+            app:destination="@id/sessionConfigFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/sessionConfigFragment"
+        android:name="com.targetdiscriminator.presentation.session_config.SessionConfigFragment"
+        android:label="Session Configuration"
+        tools:layout="@layout/fragment_session_config">
+        <action
+            android:id="@+id/action_sessionConfigFragment_to_trainingFragment"
+            app:destination="@id/trainingFragment">
+            <argument
+                android:name="config"
+                app:argType="com.targetdiscriminator.domain.model.SessionConfig" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/trainingFragment"
+        android:name="com.targetdiscriminator.presentation.training.TrainingFragment"
+        android:label="Training Session"
+        tools:layout="@layout/fragment_training" />
+
+</navigation>
+

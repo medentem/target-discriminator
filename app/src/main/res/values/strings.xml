@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Target Discriminator</string>
+    <string name="splash_loading">Loading...</string>
+    <string name="session_config_title">Session Configuration</string>
+    <string name="session_config_include_videos">Include Videos</string>
+    <string name="session_config_include_photos">Include Photos</string>
+    <string name="session_config_duration">Session Duration (minutes)</string>
+    <string name="session_config_start">Start Session</string>
+    <string name="training_session_tap_threat">Tap for Threat</string>
+    <string name="training_session_swipe_non_threat">Swipe for Non-Threat</string>
+    <string name="feedback_correct">Correct</string>
+    <string name="feedback_incorrect">Incorrect</string>
+    <string name="session_complete">Session Complete</string>
+    <string name="training_instructions">Tap the screen when you have positively identified the threat and have a clean shot. Swipe the screen when you have identified no threat exists. For videos, allow the video to end without tapping if no threat is identified.</string>
+</resources>
+
