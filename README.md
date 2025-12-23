@@ -31,7 +31,7 @@ The app follows **Clean Architecture** principles with:
   
 - **Presentation Layer**: UI and ViewModels
   - **MVI Pattern**: State, Events, and Effects for state management
-  - Fragments: `SplashFragment`, `SessionConfigFragment`, `TrainingFragment`
+  - Fragments: `SessionConfigFragment`, `TrainingFragment`
   - ViewModels: `SessionConfigViewModel`, `TrainingViewModel`
 
 ## Project Structure
@@ -52,7 +52,6 @@ app/src/main/
 │   │   └── model/           # Domain models
 │   └── presentation/
 │       ├── mvi/             # MVI base classes
-│       ├── splash/          # Splash screen
 │       ├── session_config/  # Session configuration
 │       ├── training/        # Training session
 │       └── MainActivity.kt

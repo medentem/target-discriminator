@@ -13,5 +13,10 @@
     <string name="feedback_incorrect">Incorrect</string>
     <string name="session_complete">Session Complete</string>
     <string name="training_instructions">Tap the screen when you have positively identified the threat and have a clean shot. Swipe the screen when you have identified no threat exists. For videos, allow the video to end without tapping if no threat is identified.</string>
+    <string name="age_verification_title">Content Warning</string>
+    <string name="age_verification_warning">This application contains graphic content that may be disturbing. The training materials include realistic scenarios that may not be suitable for all audiences.</string>
+    <string name="age_verification_question">Are you 18 years of age or older?</string>
+    <string name="age_verification_confirm">Yes, I am 18 or older</string>
+    <string name="age_verification_exit">No, I am under 18</string>
 </resources>
 

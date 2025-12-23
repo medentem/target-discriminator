@@ -21,6 +21,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/instructionsText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/training_instructions"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleText" />
+
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/includeVideosSwitch"
         android:layout_width="0dp"
@@ -30,7 +43,7 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText" />
+        app:layout_constraintTop_toBottomOf="@id/instructionsText" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/includePhotosSwitch"
@@ -70,8 +83,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:valueFrom="1.0"
-        android:valueTo="30.0"
-        android:value="5.0"
+        android:valueTo="10.0"
+        android:value="2.0"
         android:stepSize="1.0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,20 +100,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/durationSlider" />
-
-    <TextView
-        android:id="@+id/instructionsText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/training_instructions"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:lineSpacingExtra="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/startButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
