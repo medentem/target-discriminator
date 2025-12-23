@@ -7,7 +7,6 @@ An Android application designed to help law enforcement, military, and private c
 
 ## Features
 
-- **Splash Screen**: Initial loading screen when the app starts
 - **Session Configuration**: Configure training sessions with:
   - Toggle videos on/off
   - Toggle photos on/off
