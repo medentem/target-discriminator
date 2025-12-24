@@ -88,7 +88,8 @@ class TrainingFragment : Fragment() {
     private fun setupGestureDetector() {
         gestureDetector = GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
             override fun onSingleTapUp(e: MotionEvent): Boolean {
-                viewModel.handleEvent(TrainingEvent.OnTap)
+                showTapIndicator(e.x, e.y)
+                viewModel.handleEvent(TrainingEvent.OnTap(e.x, e.y))
                 return true
             }
 
@@ -334,13 +335,14 @@ class TrainingFragment : Fragment() {
         feedbackCallbackScheduled = true
         binding.feedbackOverlay.visibility = View.VISIBLE
         binding.feedbackText.visibility = View.VISIBLE
-        if (result.isCorrect) {
+        val feedbackColor = if (result.isCorrect) {
             binding.feedbackText.text = getString(R.string.feedback_correct)
-            binding.feedbackOverlay.background = ColorDrawable(resources.getColor(R.color.green_correct, null))
+            resources.getColor(R.color.green_correct, null)
         } else {
             binding.feedbackText.text = getString(R.string.feedback_incorrect)
-            binding.feedbackOverlay.background = ColorDrawable(resources.getColor(R.color.red_incorrect, null))
+            resources.getColor(R.color.red_incorrect, null)
         }
+        binding.feedbackOverlay.background = createVignetteDrawable(feedbackColor)
         Log.d("TrainingFragment", "showFeedback: scheduling OnFeedbackShown event in 1500ms")
         val runnable = Runnable {
             Log.d("TrainingFragment", "showFeedback: delayed callback fired, calling OnFeedbackShown")
@@ -350,6 +352,64 @@ class TrainingFragment : Fragment() {
         }
         feedbackCallbackRunnable = runnable
         binding.feedbackOverlay.postDelayed(runnable, 1500)
+    }
+    private fun createVignetteDrawable(color: Int): android.graphics.drawable.Drawable {
+        return VignetteDrawable(color)
+    }
+    private class VignetteDrawable(private val color: Int) : android.graphics.drawable.Drawable() {
+        private val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
+        private var gradient: android.graphics.RadialGradient? = null
+        override fun onBoundsChange(bounds: android.graphics.Rect) {
+            super.onBoundsChange(bounds)
+            val centerX = bounds.centerX().toFloat()
+            val centerY = bounds.centerY().toFloat()
+            val radius = kotlin.math.max(bounds.width(), bounds.height()) * 0.7f
+            val colors = intArrayOf(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.argb(
+                    (255 * 0.2).toInt(),
+                    android.graphics.Color.red(color),
+                    android.graphics.Color.green(color),
+                    android.graphics.Color.blue(color)
+                ),
+                android.graphics.Color.argb(
+                    (255 * 0.5).toInt(),
+                    android.graphics.Color.red(color),
+                    android.graphics.Color.green(color),
+                    android.graphics.Color.blue(color)
+                ),
+                android.graphics.Color.argb(
+                    (255 * 0.85).toInt(),
+                    android.graphics.Color.red(color),
+                    android.graphics.Color.green(color),
+                    android.graphics.Color.blue(color)
+                ),
+                color
+            )
+            val positions = floatArrayOf(0.0f, 0.3f, 0.5f, 0.7f, 1.0f)
+            gradient = android.graphics.RadialGradient(
+                centerX,
+                centerY,
+                radius,
+                colors,
+                positions,
+                android.graphics.Shader.TileMode.CLAMP
+            )
+            paint.shader = gradient
+        }
+        override fun draw(canvas: android.graphics.Canvas) {
+            canvas.drawRect(bounds, paint)
+        }
+        override fun setAlpha(alpha: Int) {
+            paint.alpha = alpha
+        }
+        override fun setColorFilter(colorFilter: android.graphics.ColorFilter?) {
+            paint.colorFilter = colorFilter
+        }
+        @Deprecated("Deprecated in Java")
+        override fun getOpacity(): Int {
+            return android.graphics.PixelFormat.TRANSLUCENT
+        }
     }
     private fun hideFeedback() {
         feedbackCallbackRunnable?.let { runnable ->
@@ -371,6 +431,39 @@ class TrainingFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
+    }
+    private fun showTapIndicator(x: Float, y: Float) {
+        val indicatorSize = (48 * resources.displayMetrics.density).toInt()
+        val indicatorView = View(requireContext())
+        indicatorView.layoutParams = ViewGroup.LayoutParams(
+            indicatorSize,
+            indicatorSize
+        )
+        indicatorView.x = x - indicatorSize / 2f
+        indicatorView.y = y - indicatorSize / 2f
+        indicatorView.background = createTapIndicatorDrawable()
+        indicatorView.alpha = 1.0f
+        binding.mediaContainer.addView(indicatorView)
+        indicatorView.animate()
+            .alpha(0f)
+            .scaleX(2.0f)
+            .scaleY(2.0f)
+            .setDuration(1000)
+            .withEndAction {
+                binding.mediaContainer.removeView(indicatorView)
+            }
+            .start()
+    }
+    private fun createTapIndicatorDrawable(): android.graphics.drawable.Drawable {
+        val drawable = android.graphics.drawable.GradientDrawable()
+        drawable.shape = android.graphics.drawable.GradientDrawable.OVAL
+        drawable.setColor(android.graphics.Color.TRANSPARENT)
+        val strokeWidth = (4 * resources.displayMetrics.density).toInt()
+        drawable.setStroke(
+            strokeWidth,
+            resources.getColor(R.color.white, null)
+        )
+        return drawable
     }
     private fun releasePlayer() {
         exoPlayer?.release()
