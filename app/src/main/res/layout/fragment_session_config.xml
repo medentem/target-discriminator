@@ -91,15 +91,27 @@
         app:layout_constraintTop_toBottomOf="@id/durationLabel" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/startButton"
+        android:id="@+id/manageMediaButton"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="@string/session_config_start"
+        android:text="@string/media_management_title"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/durationSlider" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/startButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/session_config_start"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/manageMediaButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

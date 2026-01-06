@@ -12,8 +12,8 @@ android {
         applicationId = "com.targetdiscriminator"
         minSdk = 24
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 5
+        versionName = "1.0.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -51,6 +51,8 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.8.2")
     // Material 3
     implementation("com.google.android.material:material:1.11.0")
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     // Navigation Component
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.6")

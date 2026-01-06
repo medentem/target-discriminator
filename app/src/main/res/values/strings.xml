@@ -18,5 +18,19 @@
     <string name="age_verification_question">Are you 18 years of age or older?</string>
     <string name="age_verification_confirm">Yes, I am 18 or older</string>
     <string name="age_verification_exit">No, I am under 18</string>
+    <string name="media_management_title">Manage Media</string>
+    <string name="media_management_import_photo">Import Photo</string>
+    <string name="media_management_import_video">Import Video</string>
+    <string name="media_management_filter_all">All</string>
+    <string name="media_management_filter_photos">Photos</string>
+    <string name="media_management_filter_videos">Videos</string>
+    <string name="media_management_filter_threat">Threat</string>
+    <string name="media_management_filter_non_threat">Non-Threat</string>
+    <string name="media_management_empty">No media imported yet</string>
+    <string name="media_management_delete">Delete</string>
+    <string name="media_management_select_threat_type">Select Threat Type</string>
+    <string name="media_management_threat">Threat</string>
+    <string name="media_management_non_threat">Non-Threat</string>
+    <string name="media_management_cancel">Cancel</string>
 </resources>
 

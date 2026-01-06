@@ -1,6 +1,10 @@
 package com.targetdiscriminator.presentation.training
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
+import android.media.ExifInterface
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.LayoutInflater
@@ -275,17 +279,23 @@ class TrainingFragment : Fragment() {
         }
         binding.mediaContainer.addView(overlayView)
         try {
-            val cacheFile = File(requireContext().cacheDir, File(mediaItem.path).name)
-            if (!cacheFile.exists()) {
-                requireContext().assets.open(mediaItem.path).use { input ->
-                    FileOutputStream(cacheFile).use { output ->
-                        input.copyTo(output)
+            val videoFile = if (mediaItem.path.startsWith("assets://")) {
+                val assetPath = mediaItem.path.removePrefix("assets://")
+                val cacheFile = File(requireContext().cacheDir, File(assetPath).name)
+                if (!cacheFile.exists()) {
+                    requireContext().assets.open(assetPath).use { input ->
+                        FileOutputStream(cacheFile).use { output ->
+                            input.copyTo(output)
+                        }
                     }
                 }
+                cacheFile
+            } else {
+                File(mediaItem.path)
             }
             val fileDataSourceFactory = DataSource.Factory { FileDataSource() }
             val dataSourceFactory = DefaultDataSource.Factory(requireContext(), fileDataSourceFactory)
-            val uri = android.net.Uri.fromFile(cacheFile)
+            val uri = android.net.Uri.fromFile(videoFile)
             val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(ExoMediaItem.fromUri(uri))
             exoPlayer?.setMediaSource(mediaSource)
@@ -316,9 +326,18 @@ class TrainingFragment : Fragment() {
         }
         binding.mediaContainer.addView(overlayView)
         try {
-            val inputStream = requireContext().assets.open(mediaItem.path)
-            val drawable = android.graphics.drawable.BitmapDrawable(resources, inputStream)
-            imageView.setImageDrawable(drawable)
+            if (mediaItem.path.startsWith("assets://")) {
+                val assetPath = mediaItem.path.removePrefix("assets://")
+                val inputStream = requireContext().assets.open(assetPath)
+                val drawable = android.graphics.drawable.BitmapDrawable(resources, inputStream)
+                imageView.setImageDrawable(drawable)
+            } else {
+                val file = File(mediaItem.path)
+                if (file.exists()) {
+                    val bitmap = decodeBitmapWithOrientation(file.absolutePath)
+                    imageView.setImageBitmap(bitmap)
+                }
+            }
         } catch (e: Exception) {
         }
     }
@@ -468,6 +487,49 @@ class TrainingFragment : Fragment() {
     private fun releasePlayer() {
         exoPlayer?.release()
         exoPlayer = null
+    }
+    private fun decodeBitmapWithOrientation(filePath: String): Bitmap? {
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = false
+        }
+        var bitmap = BitmapFactory.decodeFile(filePath, options) ?: return null
+        try {
+            val exif = ExifInterface(filePath)
+            val orientation = exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            )
+            val matrix = Matrix()
+            when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+                ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+                ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> matrix.postScale(-1f, 1f)
+                ExifInterface.ORIENTATION_FLIP_VERTICAL -> matrix.postScale(1f, -1f)
+                ExifInterface.ORIENTATION_TRANSPOSE -> {
+                    matrix.postRotate(90f)
+                    matrix.postScale(-1f, 1f)
+                }
+                ExifInterface.ORIENTATION_TRANSVERSE -> {
+                    matrix.postRotate(270f)
+                    matrix.postScale(-1f, 1f)
+                }
+            }
+            if (orientation != ExifInterface.ORIENTATION_NORMAL) {
+                val rotatedBitmap = Bitmap.createBitmap(
+                    bitmap,
+                    0,
+                    0,
+                    bitmap.width,
+                    bitmap.height,
+                    matrix,
+                    true
+                )
+                bitmap = rotatedBitmap
+            }
+        } catch (e: Exception) {
+        }
+        return bitmap
     }
     override fun onDestroyView() {
         super.onDestroyView()

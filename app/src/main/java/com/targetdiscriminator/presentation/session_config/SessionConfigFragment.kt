@@ -55,6 +55,9 @@ class SessionConfigFragment : Fragment() {
         binding.durationSlider.addOnChangeListener { _, value, _ ->
             viewModel.handleEvent(SessionConfigEvent.SetDuration(value.toInt()))
         }
+        binding.manageMediaButton.setOnClickListener {
+            findNavController().navigate(R.id.action_sessionConfigFragment_to_mediaManagementFragment)
+        }
         binding.startButton.setOnClickListener {
             viewModel.handleEvent(SessionConfigEvent.StartSession)
         }

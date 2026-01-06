@@ -29,7 +29,16 @@
                 android:name="config"
                 app:argType="com.targetdiscriminator.domain.model.SessionConfig" />
         </action>
+        <action
+            android:id="@+id/action_sessionConfigFragment_to_mediaManagementFragment"
+            app:destination="@id/mediaManagementFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/mediaManagementFragment"
+        android:name="com.targetdiscriminator.presentation.media_management.MediaManagementFragment"
+        android:label="Manage Media"
+        tools:layout="@layout/fragment_media_management" />
 
     <fragment
         android:id="@+id/trainingFragment"
