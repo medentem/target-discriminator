@@ -28,15 +28,22 @@ if [ ! -d "$MEDIA_DIR/.git" ]; then
     git submodule update --init --recursive
 fi
 
-# Update submodule to latest commit (optional - comment out if you want to pin versions)
-echo "Updating submodule to latest..."
-cd "$MEDIA_DIR"
-CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [ "$CURRENT_BRANCH" = "HEAD" ]; then
-    # Detached HEAD, checkout main branch
-    git checkout main 2>/dev/null || git checkout master 2>/dev/null || true
+# Update submodule to latest commit (skip in CI environments or if at specific commit)
+# In CI, submodule is already at the correct commit
+if [ -z "$CI" ]; then
+    echo "Updating submodule to latest..."
+    cd "$MEDIA_DIR"
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    if [ "$CURRENT_BRANCH" != "HEAD" ]; then
+        # Only pull if we're on a branch (not detached HEAD)
+        git pull origin main 2>/dev/null || git pull origin master 2>/dev/null || echo "Warning: Could not pull latest changes"
+    else
+        echo "Submodule is at a specific commit, skipping pull"
+    fi
+    cd "$ANDROID_DIR"
+else
+    echo "CI environment detected, using submodule at current commit"
 fi
-git pull origin main 2>/dev/null || git pull origin master 2>/dev/null || echo "Warning: Could not pull latest changes"
 
 # Create assets directory structure
 echo "Creating assets directory structure..."

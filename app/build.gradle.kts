@@ -42,6 +42,57 @@ android {
     }
 }
 
+// ============================================================================
+// MEDIA SYNC TASKS - Sync media from submodule to assets directory
+// ============================================================================
+
+tasks.register("syncMediaAssets", Exec::class) {
+    group = "build"
+    description = "Sync media assets from submodule to assets directory"
+    workingDir = rootProject.projectDir
+    
+    // Use bash script (works on Unix/Mac, use PowerShell on Windows)
+    if (System.getProperty("os.name").lowercase().contains("windows")) {
+        commandLine("powershell", "-ExecutionPolicy", "Bypass", "-File", "scripts/sync-media.ps1")
+    } else {
+        commandLine("bash", "scripts/sync-media.sh")
+    }
+    
+    // Only run if media submodule exists
+    doFirst {
+        val mediaDir = file("${rootProject.projectDir}/media")
+        if (!mediaDir.exists()) {
+            throw GradleException(
+                "Media submodule not found at ${mediaDir.absolutePath}.\n" +
+                "Please run: git submodule update --init --recursive"
+            )
+        }
+    }
+    
+    // Show output
+    isIgnoreExitValue = false
+    standardOutput = System.out
+    errorOutput = System.err
+}
+
+// Optional: Task to update submodule to latest
+tasks.register("updateMediaSubmodule", Exec::class) {
+    group = "build"
+    description = "Update media submodule to latest commit from remote"
+    workingDir = rootProject.projectDir
+    commandLine("git", "submodule", "update", "--remote", "media")
+}
+
+// Make preBuild depend on syncMediaAssets
+// This ensures media is synced before every build
+tasks.named("preBuild") {
+    dependsOn("syncMediaAssets")
+}
+
+// ============================================================================
+// END MEDIA SYNC TASKS
+// ============================================================================
+
 dependencies {
     // Core Android
     implementation("androidx.core:core-ktx:1.12.0")
