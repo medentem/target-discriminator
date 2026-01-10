@@ -32,13 +32,43 @@
         <action
             android:id="@+id/action_sessionConfigFragment_to_mediaManagementFragment"
             app:destination="@id/mediaManagementFragment" />
+        <action
+            android:id="@+id/action_sessionConfigFragment_to_mediaGalleryFragment"
+            app:destination="@id/mediaGalleryFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/mediaManagementFragment"
         android:name="com.targetdiscriminator.presentation.media_management.MediaManagementFragment"
         android:label="Manage Media"
-        tools:layout="@layout/fragment_media_management" />
+        tools:layout="@layout/fragment_media_management">
+        <action
+            android:id="@+id/action_mediaManagementFragment_to_mediaGalleryFragment"
+            app:destination="@id/mediaGalleryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mediaGalleryFragment"
+        android:name="com.targetdiscriminator.presentation.media_gallery.MediaGalleryFragment"
+        android:label="Media Gallery"
+        tools:layout="@layout/fragment_media_gallery">
+        <action
+            android:id="@+id/action_mediaGalleryFragment_to_mediaPreviewFragment"
+            app:destination="@id/mediaPreviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mediaPreviewFragment"
+        android:name="com.targetdiscriminator.presentation.media_gallery.MediaPreviewFragment"
+        android:label="Media Preview"
+        tools:layout="@layout/fragment_media_preview">
+        <argument
+            android:name="mediaPath"
+            app:argType="string" />
+        <argument
+            android:name="currentIndex"
+            app:argType="integer" />
+    </fragment>
 
     <fragment
         android:id="@+id/trainingFragment"

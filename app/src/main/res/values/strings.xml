@@ -32,5 +32,12 @@
     <string name="media_management_threat">Threat</string>
     <string name="media_management_non_threat">Non-Threat</string>
     <string name="media_management_cancel">Cancel</string>
+    <string name="threat_labels_title">Threat Labels</string>
+    <string name="threat_labels_description">Choose how threat and non-threat are labeled throughout the app</string>
+    <string name="threat_labels_preset_threat_non_threat">Threat / Non-Threat</string>
+    <string name="threat_labels_preset_shoot_no_shoot">Shoot / No-Shoot</string>
+    <string name="threat_labels_preset_custom">Custom</string>
+    <string name="threat_labels_custom_threat_label">Threat Label</string>
+    <string name="threat_labels_custom_non_threat_label">Non-Threat Label</string>
 </resources>
 

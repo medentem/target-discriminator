@@ -8,29 +8,16 @@
     android:padding="24dp"
     tools:context=".presentation.media_management.MediaManagementFragment">
 
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/media_management_title"
-        android:textColor="@color/white"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/importPhotoButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="4dp"
         android:text="@string/media_management_import_photo"
         app:layout_constraintEnd_toStartOf="@id/importVideoButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread" />
 
     <com.google.android.material.button.MaterialButton
@@ -42,114 +29,15 @@
         app:layout_constraintStart_toEndOf="@id/importPhotoButton"
         app:layout_constraintTop_toTopOf="@id/importPhotoButton" />
 
-    <TextView
-        android:id="@+id/filterLabel"
-        android:layout_width="wrap_content"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/manageBuiltInMediaButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Filter:"
-        android:textColor="@color/white"
-        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        android:text="Manage Built-in Media"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/importPhotoButton" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/mediaTypeChipGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filterLabel"
-        app:singleSelection="true"
-        app:checkedChip="@id/mediaTypeAllChip">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/mediaTypeAllChip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_management_filter_all"
-            android:textColor="@color/white"
-            android:checkable="true"
-            android:checked="true"
-            app:chipBackgroundColor="@color/chip_background_selector"
-            app:chipStrokeColor="@color/chip_stroke_selector"
-            app:chipStrokeWidth="2dp"
-            app:checkedIconVisible="false" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/mediaTypePhotosChip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_management_filter_photos"
-            android:textColor="@color/white"
-            android:checkable="true"
-            app:chipBackgroundColor="@color/chip_background_selector"
-            app:chipStrokeColor="@color/chip_stroke_selector"
-            app:chipStrokeWidth="2dp"
-            app:checkedIconVisible="false" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/mediaTypeVideosChip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_management_filter_videos"
-            android:textColor="@color/white"
-            android:checkable="true"
-            app:chipBackgroundColor="@color/chip_background_selector"
-            app:chipStrokeColor="@color/chip_stroke_selector"
-            app:chipStrokeWidth="2dp"
-            app:checkedIconVisible="false" />
-
-    </com.google.android.material.chip.ChipGroup>
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/threatTypeChipGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mediaTypeChipGroup"
-        app:singleSelection="true"
-        app:checkedChip="@id/threatTypeAllChip">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/threatTypeAllChip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_management_filter_all"
-            android:textColor="@color/white"
-            android:checkable="true"
-            android:checked="true"
-            app:chipBackgroundColor="@color/chip_background_selector"
-            app:chipStrokeColor="@color/chip_stroke_selector"
-            app:chipStrokeWidth="2dp"
-            app:checkedIconVisible="false" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/threatTypeThreatChip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_management_filter_threat"
-            android:textColor="@color/white"
-            android:checkable="true"
-            app:chipBackgroundColor="@color/chip_background_selector"
-            app:chipStrokeColor="@color/chip_stroke_selector"
-            app:chipStrokeWidth="2dp"
-            app:checkedIconVisible="false" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/threatTypeNonThreatChip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_management_filter_non_threat"
-            android:textColor="@color/white"
-            android:checkable="true"
-            app:chipBackgroundColor="@color/chip_background_selector"
-            app:chipStrokeColor="@color/chip_stroke_selector"
-            app:chipStrokeWidth="2dp"
-            app:checkedIconVisible="false" />
-
-    </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mediaRecyclerView"
@@ -159,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/threatTypeChipGroup" />
+        app:layout_constraintTop_toBottomOf="@id/manageBuiltInMediaButton" />
 
     <ProgressBar
         android:id="@+id/loadingProgressBar"

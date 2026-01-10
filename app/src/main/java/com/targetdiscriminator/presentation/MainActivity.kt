@@ -26,7 +26,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            binding.toolbar.updatePadding(top = systemBars.top)
+            // Apply padding to toolbar container (not toolbar itself) to maintain proper content centering
+            binding.toolbarContainer.updatePadding(top = systemBars.top)
             insets
         }
     }
@@ -34,6 +35,12 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         setupActionBarWithNavController(navController)
+        
+        // Ensure proper alignment of title with navigation icon
+        supportActionBar?.let { actionBar ->
+            actionBar.setDisplayShowTitleEnabled(true)
+            actionBar.setDisplayHomeAsUpEnabled(true)
+        }
     }
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()

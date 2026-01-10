@@ -10,7 +10,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.targetdiscriminator.data.provider.ThreatLabelProvider
 import com.targetdiscriminator.R
 import com.targetdiscriminator.databinding.FragmentMediaManagementBinding
 import com.targetdiscriminator.domain.model.MediaType
@@ -24,6 +26,7 @@ class MediaManagementFragment : Fragment() {
         MediaManagementViewModelFactory(requireContext())
     }
     private lateinit var mediaAdapter: MediaAdapter
+    private val threatLabelProvider by lazy { ThreatLabelProvider(requireContext()) }
     private var pendingImportUri: android.net.Uri? = null
     private var pendingImportMediaType: MediaType? = null
     private val photoPickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -54,6 +57,14 @@ class MediaManagementFragment : Fragment() {
         setupListeners()
         setupObservers()
     }
+    
+    override fun onResume() {
+        super.onResume()
+        // Reload threat labels in case they changed
+        viewLifecycleOwner.lifecycleScope.launch {
+            threatLabelProvider.loadConfig()
+        }
+    }
     private fun setupRecyclerView() {
         mediaAdapter = MediaAdapter { mediaItem ->
             showDeleteConfirmationDialog(mediaItem)
@@ -68,41 +79,8 @@ class MediaManagementFragment : Fragment() {
         binding.importVideoButton.setOnClickListener {
             videoPickerLauncher.launch("video/*")
         }
-        binding.mediaTypeAllChip.setOnClickListener {
-            if (!binding.mediaTypeAllChip.isChecked) {
-                binding.mediaTypeAllChip.isChecked = true
-                viewModel.handleEvent(MediaManagementEvent.SelectMediaTypeFilter(MediaTypeFilter.ALL))
-            }
-        }
-        binding.mediaTypePhotosChip.setOnClickListener {
-            if (!binding.mediaTypePhotosChip.isChecked) {
-                binding.mediaTypePhotosChip.isChecked = true
-                viewModel.handleEvent(MediaManagementEvent.SelectMediaTypeFilter(MediaTypeFilter.PHOTOS))
-            }
-        }
-        binding.mediaTypeVideosChip.setOnClickListener {
-            if (!binding.mediaTypeVideosChip.isChecked) {
-                binding.mediaTypeVideosChip.isChecked = true
-                viewModel.handleEvent(MediaManagementEvent.SelectMediaTypeFilter(MediaTypeFilter.VIDEOS))
-            }
-        }
-        binding.threatTypeAllChip.setOnClickListener {
-            if (!binding.threatTypeAllChip.isChecked) {
-                binding.threatTypeAllChip.isChecked = true
-                viewModel.handleEvent(MediaManagementEvent.SelectThreatTypeFilter(ThreatTypeFilter.ALL))
-            }
-        }
-        binding.threatTypeThreatChip.setOnClickListener {
-            if (!binding.threatTypeThreatChip.isChecked) {
-                binding.threatTypeThreatChip.isChecked = true
-                viewModel.handleEvent(MediaManagementEvent.SelectThreatTypeFilter(ThreatTypeFilter.THREAT))
-            }
-        }
-        binding.threatTypeNonThreatChip.setOnClickListener {
-            if (!binding.threatTypeNonThreatChip.isChecked) {
-                binding.threatTypeNonThreatChip.isChecked = true
-                viewModel.handleEvent(MediaManagementEvent.SelectThreatTypeFilter(ThreatTypeFilter.NON_THREAT))
-            }
+        binding.manageBuiltInMediaButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mediaManagementFragment_to_mediaGalleryFragment)
         }
     }
     private fun setupObservers() {
@@ -123,24 +101,15 @@ class MediaManagementFragment : Fragment() {
             showErrorDialog(state.errorMessage)
             viewModel.handleEvent(MediaManagementEvent.DismissError)
         }
-        updateChipSelection(state)
-        val filteredItems = state.filteredMediaItems
-        mediaAdapter.submitList(filteredItems)
-        if (filteredItems.isEmpty() && !state.isLoading) {
+        val items = state.userMediaItems
+        mediaAdapter.submitList(items)
+        if (items.isEmpty() && !state.isLoading) {
             binding.emptyText.visibility = View.VISIBLE
             binding.mediaRecyclerView.visibility = View.GONE
         } else {
             binding.emptyText.visibility = View.GONE
             binding.mediaRecyclerView.visibility = View.VISIBLE
         }
-    }
-    private fun updateChipSelection(state: MediaManagementState) {
-        binding.mediaTypeAllChip.isChecked = state.selectedMediaType == MediaTypeFilter.ALL
-        binding.mediaTypePhotosChip.isChecked = state.selectedMediaType == MediaTypeFilter.PHOTOS
-        binding.mediaTypeVideosChip.isChecked = state.selectedMediaType == MediaTypeFilter.VIDEOS
-        binding.threatTypeAllChip.isChecked = state.selectedThreatType == ThreatTypeFilter.ALL
-        binding.threatTypeThreatChip.isChecked = state.selectedThreatType == ThreatTypeFilter.THREAT
-        binding.threatTypeNonThreatChip.isChecked = state.selectedThreatType == ThreatTypeFilter.NON_THREAT
     }
     private fun handleEffect(effect: MediaManagementEffect) {
         when (effect) {
@@ -159,12 +128,13 @@ class MediaManagementFragment : Fragment() {
         }
     }
     private fun showThreatTypeSelectionDialog(mediaType: MediaType, uri: android.net.Uri) {
+        val labels = threatLabelProvider.getCurrentLabels()
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.media_management_select_threat_type)
-            .setPositiveButton(R.string.media_management_threat) { _, _ ->
+            .setPositiveButton(labels.threat) { _, _ ->
                 viewModel.handleEvent(MediaManagementEvent.ImportMedia(uri, mediaType, ThreatType.THREAT))
             }
-            .setNegativeButton(R.string.media_management_non_threat) { _, _ ->
+            .setNegativeButton(labels.nonThreat) { _, _ ->
                 viewModel.handleEvent(MediaManagementEvent.ImportMedia(uri, mediaType, ThreatType.NON_THREAT))
             }
             .setNeutralButton(R.string.media_management_cancel) { _, _ ->
